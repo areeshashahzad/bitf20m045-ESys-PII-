@@ -1,0 +1,195 @@
+<!-- addstudent.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Student</title>
+    <style>
+/* style.css */
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+h1 {
+    color: #007BFF;
+    text-align: center;
+}
+
+
+form {
+    max-width: 500px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    background-image: url('path/to/background-image.jpg');
+    background-size: cover;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    color: #555;
+}
+
+input[type="text"],
+input[type="email"],
+select,
+input[type="date"] {
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url('data:image/svg+xml;utf8,<svg fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    padding-right: 30px;
+}
+
+input[type="submit"],
+a {
+    display: inline-block;
+    background-color: #007BFF;
+    color: #fff;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+input[type="submit"]:hover,
+a:hover {
+    background-color: #0056b3;
+}
+
+.other-input {
+    display: none;
+}
+
+/* Additional styles can be added as needed */
+
+
+    </style>
+</head>
+<body>
+    <h1>Add Student</h1>
+    <form method="POST" action="{{ url_for('add_student') }}">
+        <!-- Full Name -->
+        <label for="full_name">Full Name:</label>
+        <input type="text" name="full_name" required><br>
+
+        <!-- Roll No -->
+        <label for="roll_no">Roll No:</label>
+        <input type="text" name="roll_no" required><br>
+
+        <!-- Email -->
+        <label for="email">Email:</label>
+        <input type="email" name="email" required><br>
+
+        <!-- Gender -->
+        <label for="gender">Gender:</label>
+        <select name="gender" required>
+            <option value="female">Female</option>
+            <option value="male">Male</option>
+            <option value="other">Other</option>
+        </select><br>
+
+        <!-- Date of Birth -->
+        <label for="dob">Date of Birth:</label>
+        <input type="date" name="dob" required><br>
+
+        <!-- City -->
+        <label for="city">City:</label>
+        <select name="city" id="cityDropdown" required onchange="toggleOtherField('cityDropdown', 'cityOtherInput')">
+            <!-- Add dynamic options using data from the server -->
+            {% for city in cities %}
+                <option value="{{ city }}">{{ city }}</option>
+            {% endfor %}
+            <option value="other">Other</option>
+        </select>
+        <input type="text" name="city_other" id="cityOtherInput" class="other-input" placeholder="Enter your city">
+        <br>
+
+        <!-- Interest -->
+        <label for="interest">Interest:</label>
+        <select name="interest" id="interestDropdown" required onchange="toggleOtherField('interestDropdown', 'interestOtherInput')">
+            <!-- Add dynamic options using data from the server -->
+            {% for interest in interests %}
+                <option value="{{ interest }}">{{ interest }}</option>
+            {% endfor %}
+            <option value="other">Other</option>
+        </select>
+        <input type="text" name="interest_other" id="interestOtherInput" class="other-input" placeholder="Enter your interest">
+        <br>
+
+        <!-- Department -->
+        <label for="department">Department:</label>
+        <select name="department" id="departmentDropdown" required onchange="toggleOtherField('departmentDropdown', 'departmentOtherInput')">
+            <!-- Add dynamic options using data from the server -->
+            {% for department in departments %}
+                <option value="{{ department }}">{{ department }}</option>
+            {% endfor %}
+            <option value="other">Other</option>
+        </select>
+        <input type="text" name="department_other" id="departmentOtherInput" class="other-input" placeholder="Enter your department">
+        <br>
+
+        <!-- Degree Title -->
+        <label for="degree_title">Degree Title:</label>
+        <select name="degree_title" id="degreeTitleDropdown" required onchange="toggleOtherField('degreeTitleDropdown', 'degreeTitleOtherInput')">
+            <!-- Add dynamic options using data from the server -->
+            {% for title in degree_titles %}
+                <option value="{{ title }}">{{ title }}</option>
+            {% endfor %}
+            <option value="other">Other</option>
+        </select>
+        <input type="text" name="degree_title_other" id="degreeTitleOtherInput" class="other-input" placeholder="Enter your degree title">
+        <br>
+
+        <!-- Subject -->
+        <label for="subject">Subject:</label>
+        <input type="text" name="subject" required><br>
+
+        <!-- Start Date -->
+        <label for="start_date">Start Date:</label>
+        <input type="date" name="start_date" required><br>
+
+        <!-- End Date -->
+        <label for="end_date">End Date:</label>
+        <input type="date" name="end_date" required><br>
+
+        <input type="submit" value="Create">
+        <a href="{{ url_for('studentlist') }}">Cancel</a>
+    </form>
+
+    <script>
+        function toggleOtherField(dropdownId, otherInputId) {
+            var dropdown = document.getElementById(dropdownId);
+            var otherInput = document.getElementById(otherInputId);
+
+            if (dropdown.value === 'other') {
+                otherInput.style.display = 'block';
+                otherInput.setAttribute('required', 'required');
+            } else {
+                otherInput.style.display = 'none';
+                otherInput.removeAttribute('required');
+            }
+        }
+    </script>
+</body>
+</html>

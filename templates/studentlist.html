@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Interest System - Dashboard</title>
+    <!-- Include Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="static/css files/studentList.css">
+    <style>
+        /* Apply global styling to the body */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f8f9fa; /* Bootstrap light background color */
+    margin: 0;
+    padding: 0;
+}
+
+/* Style the navigation bar */
+.navbar {
+    background-color: #007bff; /* Bootstrap primary color */
+    padding: 1rem 2rem;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-brand {
+    font-weight: bold;
+    color: #fff; /* White text color */
+}
+
+.navbar-toggler-icon {
+    color: #fff;
+}
+
+.navbar-nav {
+    margin-left: auto;
+}
+
+.nav-link {
+    color: #fff;
+    transition: color 0.3s ease;
+}
+
+.nav-link:hover {
+    color: #ffc107; /* Bootstrap warning color on hover */
+}
+
+/* Style the container */
+.container {
+    margin-top: 2rem;
+    background-color: #fff;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+}
+
+/* Style the table */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+
+.table th, .table td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid #dee2e6;
+}
+
+/* Style the buttons in the last column of the table */
+.btn {
+    margin-right: 0.5rem;
+    transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+    background-color: #28a745; /* Bootstrap success color on hover */
+}
+
+/* Style the page size dropdown */
+#pageSizeDropdown {
+    width: 100px;
+}
+
+/* Style the pagination information */
+.pagination-info {
+    margin-top: 0.5rem;
+}
+
+/* Apply responsive styling for smaller screens */
+@media (max-width: 767px) {
+    .table th, .table td {
+        padding: 0.5rem;
+    }
+
+    .btn {
+        margin-bottom: 0.5rem;
+    }
+}
+
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#">Student Interest System</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+            <li class="nav-item active">
+                <a class="nav-link" href="/">Dashboard</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/add_student">Add Student</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<div class="container mt-4">
+    <h2>Student List</h2>
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <label for="pageSizeDropdown">Page Size:</label>
+            <select id="pageSizeDropdown" class="form-control" onchange="changePageSize()">
+                <option value="" disabled selected>Select an option</option>
+                <option value="5">5</option>
+                <option value="10" selected>10</option>
+                <option value="20">20</option>
+            </select>
+        </div>
+    </div>
+    <table class="table" id="studentTable">
+        <thead>
+            <tr>
+                <th>Full Name</th>
+                <th>Roll Number</th>
+                <th>Email Address</th>
+                <th>Gender</th>
+                <th>Date of Birth</th>
+                <th>City</th>
+                <th>Interest</th>
+                <th>Department</th>
+                <th>Degree Title</th>
+                <th>Subject</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Actions</th> <!-- New column for actions -->
+            </tr>
+        </thead>
+    </table>
+</div>
+
+<!-- Include jQuery and DataTables JS -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.js"></script>
+
+<script>
+    var pageSize = 10;
+    var currentPage = 1;
+    var totalPages = 1;
+
+    $(document).ready(function () {
+        var table = $('#studentTable').DataTable({
+            "columns": [
+                { "data": "full_name" },
+                { "data": "roll_number" },
+                { "data": "email" },
+                { "data": "gender" },
+                { "data": "dob" },
+                { "data": "city" },
+                { "data": "interest" },
+                { "data": "department" },
+                { "data": "degree_title" },
+                { "data": "subject" },
+                { "data": "start_date" },
+                { "data": "end_date" },
+                {
+                    "data": null,
+                    "render": function (data, type, row) {
+                        return '<button class="btn btn-primary btn-sm" onclick="viewStudent(' + row.id + ')">View</button>' +
+                               '<button class="btn btn-warning btn-sm" onclick="editStudent(' + row.id + ')">Edit</button>' +
+                               '<button class="btn btn-danger btn-sm" onclick="deleteStudent(' + row.id + ')">Delete</button>';
+                    }
+                }
+            ]
+        });
+
+        // Assume you fetch data from the server, and then you can update the table like this:
+        // table.clear().rows.add(yourDataArray).draw();
+    });
+
+    function viewStudent(studentId) {
+        // Redirect to the view student page
+        window.location.href = '/viewStudent/' + studentId;
+    }
+
+    function editStudent(studentId) {
+        // Assuming you want to display an alert for the edit action
+        alert('Edit Student with ID: ' + studentId);
+    }
+
+    function deleteStudent(studentId) {
+        // Assuming you want to display a confirmation prompt for the delete action
+        var confirmDelete = confirm('Are you sure you want to delete Student with ID: ' + studentId + '?');
+
+        if (confirmDelete) {
+            // Implement actual delete logic here
+            alert('Deleting Student with ID: ' + studentId);
+        }
+    }
+
+    function changePageSize() {
+        pageSize = parseInt(document.getElementById("pageSizeDropdown").value);
+        currentPage = 1;
+        totalPages = 1; // You may need to calculate the total pages based on your data
+        updatePagination();
+        updateTable();
+    }
+
+    function updatePagination() {
+        document.getElementById("currentPage").innerHTML = currentPage;
+        document.getElementById("totalPages").innerHTML = totalPages;
+    }
+
+    function updateTable() {
+        // You may need to modify this function based on your actual implementation
+        // This is a placeholder for updating the table content
+        console.log("Updating table for page: " + currentPage + ", pageSize: " + pageSize);
+    }
+</script>
+</body>
+</html>
+
+
